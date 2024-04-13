@@ -45,6 +45,15 @@ public class PostController {
         return ResponseEntity.ok(updatedPost);
     }
 
+    // 게시글 삭제
+    @DeleteMapping("/{postId}")
+    @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다. (soft_delete)")
+    @ApiResponse(responseCode = "200", description = "게시글 삭제 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDocument.class)))
+    public ResponseEntity<PostDocument> deletePost(@PathVariable String postId){
+        PostDocument deletedPost = postService.deletePost(postId);
+        return ResponseEntity.ok(deletedPost);
+    }
+
     @GetMapping
     @Operation(summary = "모든 게시글 조회", description = "등록된 모든 게시글 목록을 반환합니다.")
     @ApiResponse(responseCode = "200", description = "게시글 목록 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDocument.class)))

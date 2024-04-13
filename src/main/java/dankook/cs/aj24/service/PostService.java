@@ -66,6 +66,18 @@ public class PostService {
         return postRepository.save(existingPost);
     }
 
+    // 게시글 삭제
+    public PostDocument deletePost(String postId){
+        // 기존 게시글 조회
+        PostDocument existingPost = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다: " + postId));
+
+        // 삭제일자 업데이트
+        existingPost.setDeletedAt(LocalDateTime.now());
+
+        return postRepository.save(existingPost);
+    }
+
 
     // 전체 조회
     public List<PostDocument> getAllPosts() {
