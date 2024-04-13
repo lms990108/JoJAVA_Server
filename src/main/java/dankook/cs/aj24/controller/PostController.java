@@ -12,8 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -54,10 +53,19 @@ public class PostController {
         return ResponseEntity.ok(deletedPost);
     }
 
+    // 게시글 조회
+    @GetMapping("/{postId}")
+    @Operation(summary = "게시글 조회", description = "게시글을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "게시글 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDocument.class)))
+    public ResponseEntity<PostDocument> getPost(@PathVariable String postId) {
+        PostDocument post = postService.getPost(postId);
+        return ResponseEntity.ok(post);
+    }
+
     @GetMapping
     @Operation(summary = "모든 게시글 조회", description = "등록된 모든 게시글 목록을 반환합니다.")
     @ApiResponse(responseCode = "200", description = "게시글 목록 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDocument.class)))
-    public List<PostDocument> getAllPosts() {
-        return postService.getAllPosts();
+    public Page<PostDocument> getAllPosts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return postService.getAllPosts(page, size);
     }
 }
