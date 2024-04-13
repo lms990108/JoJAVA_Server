@@ -14,8 +14,9 @@ import java.time.LocalDateTime;
 @Getter
 @Document("post")
 public class PostDocument {
+
     @Id
-    private Long id;
+    private String id;
     private Integer postNumber;
     private String title;
     private String content;
