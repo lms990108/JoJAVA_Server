@@ -2,18 +2,13 @@ package dankook.cs.aj24.dto.reviewdtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
+import lombok.Setter;
 
 @AllArgsConstructor
 @Getter
-public class ReviewDTO {
-    private Long id;
+public class UpdateReviewDTO {
     private String title;
     private String content;
     private String stars;
     private String imgUrl;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 }
