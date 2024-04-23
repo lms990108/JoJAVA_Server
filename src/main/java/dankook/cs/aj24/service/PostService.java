@@ -1,10 +1,10 @@
 package dankook.cs.aj24.service;
 
 import dankook.cs.aj24.common.error.CustomException;
-import dankook.cs.aj24.common.error.ErrorCode;
 import dankook.cs.aj24.document.PostDocument;
-import dankook.cs.aj24.dto.CreatePostDTO;
-import dankook.cs.aj24.dto.UpdatePostDTO;
+import dankook.cs.aj24.dto.postdtos.CreatePostDTO;
+import dankook.cs.aj24.dto.postdtos.UpdatePostDTO;
+import dankook.cs.aj24.common.error.ErrorCode;
 import dankook.cs.aj24.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

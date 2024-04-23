@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     /* 400 BAD_REQUEST : 잘못된 요청 */
     POST_DELETED(HttpStatus.BAD_REQUEST, "삭제된 게시글입니다."),
+    REVIEW_DELETED(HttpStatus.BAD_REQUEST, "삭제된 리뷰입니다."),
 
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     INVALID_AUTH_TOKEN(HttpStatus.UNAUTHORIZED, "권한 정보가 없는 토큰입니다."),

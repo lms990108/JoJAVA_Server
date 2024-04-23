@@ -1,8 +1,8 @@
 package dankook.cs.aj24.controller;
 
 import dankook.cs.aj24.document.PostDocument;
-import dankook.cs.aj24.dto.CreatePostDTO;
-import dankook.cs.aj24.dto.UpdatePostDTO;
+import dankook.cs.aj24.dto.postdtos.CreatePostDTO;
+import dankook.cs.aj24.dto.postdtos.UpdatePostDTO;
 import dankook.cs.aj24.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
