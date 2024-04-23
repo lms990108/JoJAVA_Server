@@ -1,4 +1,4 @@
-package dankook.cs.aj24.dto.review;
+package dankook.cs.aj24.dto.reviewdtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
