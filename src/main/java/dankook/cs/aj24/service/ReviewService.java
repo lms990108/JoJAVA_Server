@@ -31,6 +31,7 @@ public class ReviewService {
         // createReviewDTO를 ReviewDocument로 변환
         ReviewDocument review = new ReviewDocument(
                 null, // id는 자동 생성
+                createReviewDTO.getTarget(),
                 createReviewDTO.getTitle(),
                 createReviewDTO.getContent(),
                 createReviewDTO.getStars(),
@@ -45,6 +46,7 @@ public class ReviewService {
     }
 
     // 리뷰 수정
+    // 리뷰 대상(target)은 수정 불가
     public ReviewDocument updateReview(String reviewId, UpdateReviewDTO updateReviewDTO) {
         // 기존 리뷰 조회
         ReviewDocument existingReview = reviewRepository.findById(reviewId)

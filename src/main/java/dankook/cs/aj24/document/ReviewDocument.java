@@ -19,6 +19,7 @@ public class ReviewDocument {
 
     @Id
     private String id;
+    private String target;
     private String title;
     private String content;
     private String stars;

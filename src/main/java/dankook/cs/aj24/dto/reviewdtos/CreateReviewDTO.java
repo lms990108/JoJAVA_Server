@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class CreateReviewDTO {
+    private String target;
     private String title;
     private String content;
     private String stars;
