@@ -1,4 +1,4 @@
-package dankook.cs.aj24.dto;
+package dankook.cs.aj24.dto.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
