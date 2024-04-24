@@ -7,6 +7,7 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+// 기본 swagger API 설정
 @OpenAPIDefinition(
         info = @Info(title = "API 명세서",
                 description = "API 명세서",

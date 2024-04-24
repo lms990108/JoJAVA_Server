@@ -5,12 +5,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
+// 스프링 시큐리티 로그인 성공시 핸들러, 아직 사용하지 않음
 @Component
-@Slf4j
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     @Override
