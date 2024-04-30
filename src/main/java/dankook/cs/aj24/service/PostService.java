@@ -15,9 +15,7 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 
-import static dankook.cs.aj24.common.error.ErrorCode.OBJECT_NOT_FOUND;
-import static dankook.cs.aj24.common.error.ErrorCode.POST_DELETED;
-
+import static dankook.cs.aj24.common.error.ErrorCode.*;
 @Service
 public class PostService {
     private final PostRepository postRepository;
