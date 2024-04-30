@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class ReviewDTO {
-    private Long id;
+    private String id;
     private String target;
     private String title;
     private String content;

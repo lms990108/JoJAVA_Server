@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class PostDTO {
-    private Long id;
+    private String id;
     private Integer postNumber;
     private String title;
     private String content;
