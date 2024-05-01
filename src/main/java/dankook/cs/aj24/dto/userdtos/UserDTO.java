@@ -11,6 +11,7 @@ import java.util.List;
 public class UserDTO {
     private String id;
     private String name;
+    private String kakaoId;
     private List<String> hart;
     private String profileImg;
     private LocalDateTime createdAt;

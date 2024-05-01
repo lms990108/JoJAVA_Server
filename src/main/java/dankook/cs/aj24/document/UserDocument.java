@@ -1,7 +1,9 @@
 
 package dankook.cs.aj24.document;
 
+import dankook.cs.aj24.common.util.UserRole;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,14 +18,17 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 @Document("user")
 public class UserDocument {
 
     @Id
     private String id;
     private String name;
+    private String kakaoId;
     private List<String> hart; // 게시글 좋아요 배열로 사용하기 위해 List<String> 형으로 변경
     private String profile_img;
+    private UserRole userRole;
 
     @CreatedDate
     private LocalDateTime createdAt;
