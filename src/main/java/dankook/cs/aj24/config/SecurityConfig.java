@@ -29,6 +29,7 @@ public class SecurityConfig {
     @Bean  // 스프링 컨테이너에 의해 관리되는 빈 객체를 생성
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF(Cross-Site Request Forgery) 보호 기능을 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)  // 스프링 시큐리티의 기본 로그인 페이지를 비활성화
                 .httpBasic(AbstractHttpConfigurer::disable)  // HTTP 기본 인증 비활성화
@@ -45,7 +46,7 @@ public class SecurityConfig {
 
                 // HTTP 요청에 대한 보안 규칙을 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/api/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**").permitAll()  // 지정된 경로들은 인증 없이 접근 허용
+                        .requestMatchers("/", "/api/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**").permitAll()  // 지정된 경로들은 인증 없이 접근 허용
                         .requestMatchers("/admin/**").hasRole("ADMIN")  // "/admin/**" 경로는 'ADMIN' 역할을 가진 사용자만 접근 가능
                         .anyRequest().authenticated())  // 그 외 모든 요청은 인증을 요구
 
