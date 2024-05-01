@@ -28,7 +28,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
 
         String nickname = (String) profile.get("nickname");
-        String profileImage = (String) profile.get("thumbnail_image_url");
+        String profileImage = (String) profile.get("image");
 
         UserDocument userDocument = new UserDocument(
                 null, // id는 MongoDB에서 자동 생성됩니다.
