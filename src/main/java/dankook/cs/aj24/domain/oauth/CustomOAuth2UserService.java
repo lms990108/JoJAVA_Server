@@ -1,16 +1,17 @@
 package dankook.cs.aj24.domain.oauth;
 
-import dankook.cs.aj24.common.util.KakaoUserInfo;
 import dankook.cs.aj24.common.util.UserRole;
 import dankook.cs.aj24.domain.user.UserDocument;
 import dankook.cs.aj24.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,11 +26,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        String userNameAttributeName = userRequest.getClientRegistration()
-                .getProviderDetails()
-                .getUserInfoEndpoint()
-                .getUserNameAttributeName();
-
         KakaoUserInfo kakaoUserInfo = new KakaoUserInfo(attributes);
         String socialId = kakaoUserInfo.getSocialId();
         String name = kakaoUserInfo.getName();
@@ -37,7 +33,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Optional<UserDocument> bySocialId = userRepository.findBySocialId(socialId);
         UserDocument user = bySocialId.orElseGet(() -> saveSocialUser(socialId, name));
 
-        return new PrincipalDetail(user, attributes);
+        return new PrincipalDetail(user, Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().getValue())),
+                attributes);
     }
 
     // 소셜 ID 로 가입된 사용자가 없으면 새로운 사용자를 만들어 저장한다

@@ -25,6 +25,7 @@ public class UserDocument {
     @Id
     private String id;
     private String name;
+    private String email;
     private String socialId; // 이 필드가 추가되어야 합니다.
     private List<String> hart; // 게시글 좋아요 배열로 사용하기 위해 List<String> 형으로 변경
     private String profile_img;

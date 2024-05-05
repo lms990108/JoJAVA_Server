@@ -1,4 +1,4 @@
-package dankook.cs.aj24.common.util;
+package dankook.cs.aj24.domain.oauth;
 
 import java.util.Map;
 

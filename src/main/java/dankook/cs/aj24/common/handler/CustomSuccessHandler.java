@@ -14,7 +14,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         // 로그인 성공 후 리디렉션할 URL 설정
-        String redirectUrl = "http://localhost:8080/"; // 프론트엔드로 리디렉트 할 주소
+        String redirectUrl = "http://localhost:8080/login/success"; // 프론트엔드로 리디렉트 할 주소
         response.sendRedirect(redirectUrl);
     }
 }
