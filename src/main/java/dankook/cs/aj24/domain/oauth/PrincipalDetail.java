@@ -53,9 +53,11 @@ public class PrincipalDetail implements UserDetails, OAuth2User {
         return authorities;
     }
 
+    // 비밀번호 일단 없음
     @Override
     public String getPassword() {
 //        return userDocument.getPassword();
+        return null;
     }
 
     @Override
