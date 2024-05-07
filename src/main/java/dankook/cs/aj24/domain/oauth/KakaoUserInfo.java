@@ -25,7 +25,7 @@ public class KakaoUserInfo {
     }
 
     public String getProfileImg() {
-        return String.valueOf(profile가.get("image"));
+        return String.valueOf(profile.get("image"));
     }
 
     public String getEmail() { return email; }
