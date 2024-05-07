@@ -7,11 +7,13 @@ public class KakaoUserInfo {
     public static String socialId;
     public static Map<String, Object> account;
     public static Map<String, Object> profile;
+    public static String email;
 
     public KakaoUserInfo(Map<String, Object> attributes) {
         socialId = String.valueOf(attributes.get("id"));
         account = (Map<String, Object>) attributes.get("kakao_account");
         profile = (Map<String, Object>) account.get("profile");
+        email = String.valueOf(account.get("email"));
     }
 
     public String getSocialId() {
@@ -23,6 +25,8 @@ public class KakaoUserInfo {
     }
 
     public String getProfileImg() {
-        return String.valueOf(profile.get("image"));
+        return String.valueOf(profile가.get("image"));
     }
+
+    public String getEmail() { return email; }
 }
