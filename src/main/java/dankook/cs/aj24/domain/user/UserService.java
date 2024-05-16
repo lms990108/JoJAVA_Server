@@ -1,10 +1,16 @@
 package dankook.cs.aj24.domain.user;
 
+import dankook.cs.aj24.common.error.CustomException;
 import dankook.cs.aj24.domain.user.userdtos.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static dankook.cs.aj24.common.error.ErrorCode.USER_NOT_AUTHENTICATED;
+import static dankook.cs.aj24.common.error.ErrorCode.USER_NOT_FOUND;
 
 @Service
 public class UserService {
@@ -24,4 +30,15 @@ public class UserService {
     public void deleteUser(String id) {
         userRepository.deleteById(id);
     }
+
+    public UserDocument getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new CustomException(USER_NOT_AUTHENTICATED);
+        }
+        String userEmail = authentication.getName();
+        return userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+    }
+
 }

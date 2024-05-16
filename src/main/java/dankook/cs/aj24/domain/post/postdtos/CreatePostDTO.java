@@ -9,4 +9,5 @@ public class CreatePostDTO {
     private String title;
     private String content;
     private String imgUrl;
+    private String authorId; // 작성자 ID 추가
 }
