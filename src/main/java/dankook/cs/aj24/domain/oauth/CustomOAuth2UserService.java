@@ -50,6 +50,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         );
 
         System.out.println("시큐리티 컨텍스트 저장 결과 :" + SecurityContextHolder.getContext().getAuthentication());
+        System.out.println("컨텍스트에서 getprincipal :" + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        System.out.println("getprincipal 타입 :" + SecurityContextHolder.getContext().getAuthentication().getPrincipal().getClass().getSimpleName());
 
         return principalDetail;
     }

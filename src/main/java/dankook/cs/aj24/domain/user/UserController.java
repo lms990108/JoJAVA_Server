@@ -40,6 +40,7 @@ public class UserController {
     @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
     public ResponseEntity<?> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("현재 인증값으로 들어와있는 사용자 정보: " + authentication);
 
         if (authentication == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("authentication is null");
