@@ -1,6 +1,6 @@
 package dankook.cs.aj24.domain.user.userdtos;
 
-import dankook.cs.aj24.common.util.UserRole;
+import dankook.cs.aj24.domain.user.UserRole;
 import dankook.cs.aj24.domain.user.UserDocument;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

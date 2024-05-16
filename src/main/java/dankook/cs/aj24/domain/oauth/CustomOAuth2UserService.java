@@ -1,10 +1,12 @@
 package dankook.cs.aj24.domain.oauth;
 
-import dankook.cs.aj24.common.util.UserRole;
+import dankook.cs.aj24.domain.user.UserRole;
 import dankook.cs.aj24.domain.user.UserDocument;
 import dankook.cs.aj24.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -37,8 +39,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Optional<UserDocument> bySocialId = userRepository.findBySocialId(socialId);
         UserDocument user = bySocialId.orElseGet(() -> saveSocialUser(socialId, name, profileImg, email));
 
-        return new PrincipalDetail(user, Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().getValue())),
+        PrincipalDetail principalDetail = new PrincipalDetail(user, Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().getValue())),
                 attributes);
+
+        System.out.println("principalDetail: " + principalDetail);
+
+        // SecurityContextHolder에 인증 정보 설정
+        SecurityContextHolder.getContext().setAuthentication(
+                new OAuth2AuthenticationToken(principalDetail, principalDetail.getAuthorities(), userRequest.getClientRegistration().getRegistrationId())
+        );
+
+        System.out.println("시큐리티 컨텍스트 저장 결과 :" + SecurityContextHolder.getContext().getAuthentication());
+
+        return principalDetail;
     }
 
     // 사용자 정보를 저장하는 메서드, 필요한 정보를 모두 파라미터로 전달

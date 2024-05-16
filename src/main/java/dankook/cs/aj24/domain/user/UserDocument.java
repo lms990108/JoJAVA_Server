@@ -1,7 +1,6 @@
 
 package dankook.cs.aj24.domain.user;
 
-import dankook.cs.aj24.common.util.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
