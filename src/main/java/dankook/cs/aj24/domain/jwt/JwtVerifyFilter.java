@@ -20,8 +20,6 @@ import java.util.Map;
 @Component
 public class JwtVerifyFilter extends OncePerRequestFilter {
 
-    private static final String[] whitelist = {"/signUp", "/login" , "/refresh", "/", "/index.html"};
-
     private static void checkAuthorizationHeader(String header) {
         if(header == null) {
             throw new CustomJwtException("토큰이 전달되지 않았습니다");
@@ -47,6 +45,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             Authentication authentication = JwtUtils.getAuthentication(token);
 
             log.info("authentication = {}", authentication);
+            System.out.println("jwtFilter 토큰검증: " + authentication);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
