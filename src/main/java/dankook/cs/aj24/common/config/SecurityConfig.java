@@ -1,6 +1,8 @@
 package dankook.cs.aj24.common.config;
 
+import dankook.cs.aj24.domain.jwt.JwtConstants;
 import dankook.cs.aj24.domain.oauth.CustomOAuth2UserService;
+import dankook.cs.aj24.domain.jwt.JwtVerifyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import dankook.cs.aj24.common.handler.CustomSuccessHandler;
 
@@ -19,11 +22,13 @@ public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
+    private final JwtVerifyFilter jwtVerifyFilter;
 
     @Autowired  // 스프링의 의존성 주입을 위한 생성자
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler) {
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JwtVerifyFilter jwtVerifyFilter) {
         this.customOAuth2UserService = customOAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
+        this.jwtVerifyFilter = jwtVerifyFilter;
     }
 
     @Bean  // 스프링 컨테이너에 의해 관리되는 빈 객체를 생성
@@ -33,6 +38,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF(Cross-Site Request Forgery) 보호 기능을 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)  // 스프링 시큐리티의 기본 로그인 페이지를 비활성화
                 .httpBasic(AbstractHttpConfigurer::disable)  // HTTP 기본 인증 비활성화
+
+                // JWT 필터 추가
+                .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
 
                 // OAuth2 로그인 설정
                 .oauth2Login(oauth2 -> oauth2
@@ -46,7 +54,7 @@ public class SecurityConfig {
 
                 // HTTP 요청에 대한 보안 규칙을 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/api/**", "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**").permitAll()  // 지정된 경로들은 인증 없이 접근 허용
+                        .requestMatchers(JwtConstants.WHITELIST).permitAll()  // 지정된 경로들은 인증 없이 접근 허용
                         .requestMatchers("/admin/**").hasRole("ADMIN")  // "/admin/**" 경로는 'ADMIN' 역할을 가진 사용자만 접근 가능
                         .anyRequest().authenticated())  // 그 외 모든 요청은 인증을 요구
 
