@@ -50,12 +50,7 @@ public class JwtUtils {
         String name = (String) claims.get("name");
         String role = (String) claims.get("role");
         UserRole userRole = UserRole.valueOf(role);
-
-        System.out.println("getAuthentication 에서 해석한 - Email: " + email + ", Name: " + name + ", Role: " + role);
-
         UserDocument userDocument = UserDocument.builder().email(email).name(name).userRole(userRole).build();
-
-        System.out.println("getAuthentication 에서 token 해석한 userDocument :" + userDocument);
 
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(userDocument.getUserRole().getValue()));
         PrincipalDetail principalDetail = new PrincipalDetail(userDocument, authorities);
@@ -72,7 +67,6 @@ public class JwtUtils {
                     .build()
                     .parseClaimsJws(token) // 파싱 및 검증, 실패 시 에러
                     .getBody();
-            System.out.println("Claims: " + claim); // 토큰 생성 유효성 검사를 위한
         } catch(ExpiredJwtException expiredJwtException){
             throw new CustomExpiredJwtException("토큰이 만료되었습니다", expiredJwtException);
         } catch(Exception e){

@@ -42,16 +42,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         PrincipalDetail principalDetail = new PrincipalDetail(user, Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().getValue())),
                 attributes);
 
-        System.out.println("principalDetail: " + principalDetail);
-
         // SecurityContextHolder에 인증 정보 설정
         SecurityContextHolder.getContext().setAuthentication(
                 new OAuth2AuthenticationToken(principalDetail, principalDetail.getAuthorities(), userRequest.getClientRegistration().getRegistrationId())
         );
-
-        System.out.println("시큐리티 컨텍스트 저장 결과 :" + SecurityContextHolder.getContext().getAuthentication());
-        System.out.println("컨텍스트에서 getprincipal :" + SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        System.out.println("getprincipal 타입 :" + SecurityContextHolder.getContext().getAuthentication().getPrincipal().getClass().getSimpleName());
 
         return principalDetail;
     }

@@ -41,18 +41,15 @@ public class UserController {
     @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
     public ResponseEntity<?> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("현재 인증값으로 들어와있는 사용자 정보: " + authentication);
-        System.out.println("getPrincipal 값 :" + authentication.getPrincipal());
         if (authentication == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("authentication is null");
         }
         else if (!(authentication.getPrincipal() instanceof OAuth2User)) {
-            System.out.println("======!(authentication.getPrincipal() instanceof OAuth2User) 여기서 걸림 ======");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(authentication.getPrincipal());
         }
 
-        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
-        String userEmail = oauthUser.getAttribute("email");
+        String userEmail = ((OAuth2User) authentication.getPrincipal()).getName();
+
         Optional<UserDocument> userDocument = userService.getUserByEmail(userEmail);
         if (userDocument.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");

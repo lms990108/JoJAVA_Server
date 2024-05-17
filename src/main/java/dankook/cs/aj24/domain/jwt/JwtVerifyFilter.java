@@ -41,10 +41,6 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             checkAuthorizationHeader(authHeader);   // header 가 올바른 형식인지 체크
             String token = JwtUtils.getTokenFromHeader(authHeader);
             Authentication authentication = JwtUtils.getAuthentication(token);
-
-            System.out.println("토큰값: " + token);
-            System.out.println("jwtFilter 토큰검증: " + authentication);
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);    // 다음 필터로 이동

@@ -14,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import dankook.cs.aj24.common.handler.CustomSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration  // 스프링의 설정 클래스를 정의하는 어노테이션
 @EnableWebSecurity  // 스프링 시큐리티의 웹 보안 기능을 활성화
