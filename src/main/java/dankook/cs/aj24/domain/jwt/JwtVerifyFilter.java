@@ -5,7 +5,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
-@Slf4j
 @Component
 public class JwtVerifyFilter extends OncePerRequestFilter {
 
@@ -44,7 +42,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             String token = JwtUtils.getTokenFromHeader(authHeader);
             Authentication authentication = JwtUtils.getAuthentication(token);
 
-            log.info("authentication = {}", authentication);
+            System.out.println("토큰값: " + token);
             System.out.println("jwtFilter 토큰검증: " + authentication);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

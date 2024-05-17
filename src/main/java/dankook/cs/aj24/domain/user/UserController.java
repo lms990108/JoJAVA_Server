@@ -1,6 +1,7 @@
 package dankook.cs.aj24.domain.user;
 
 import dankook.cs.aj24.common.error.CustomException;
+import dankook.cs.aj24.domain.oauth.PrincipalDetail;
 import dankook.cs.aj24.domain.user.userdtos.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,18 +42,18 @@ public class UserController {
     public ResponseEntity<?> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("현재 인증값으로 들어와있는 사용자 정보: " + authentication);
-
+        System.out.println("getPrincipal 값 :" + authentication.getPrincipal());
         if (authentication == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("authentication is null");
         }
         else if (!(authentication.getPrincipal() instanceof OAuth2User)) {
-            System.out.println(authentication.getPrincipal());
+            System.out.println("======!(authentication.getPrincipal() instanceof OAuth2User) 여기서 걸림 ======");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(authentication.getPrincipal());
         }
 
         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
-        String userId = oauthUser.getAttribute("id");
-        Optional<UserDocument> userDocument = userService.getUserById(userId);
+        String userEmail = oauthUser.getAttribute("email");
+        Optional<UserDocument> userDocument = userService.getUserByEmail(userEmail);
         if (userDocument.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }

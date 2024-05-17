@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import dankook.cs.aj24.common.handler.CustomSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration  // 스프링의 설정 클래스를 정의하는 어노테이션
@@ -40,7 +41,7 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)  // HTTP 기본 인증 비활성화
 
                 // JWT 필터 추가
-                .addFilterBefore(jwtVerifyFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
 
                 // OAuth2 로그인 설정
                 .oauth2Login(oauth2 -> oauth2
