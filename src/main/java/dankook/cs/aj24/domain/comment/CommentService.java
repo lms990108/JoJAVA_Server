@@ -126,4 +126,10 @@ public class CommentService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return commentRepository.findByDeletedAtIsNull(pageable);
     }
+
+    // 특정 게시글의 댓글 전체 조회 및 페이지네이션
+    public Page<CommentDocument> getCommentsByPostId(String postId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return commentRepository.findByPostIdAndDeletedAtIsNull(postId, pageable);
+    }
 }
