@@ -1,6 +1,6 @@
 package dankook.cs.aj24.domain.jwt;
 
-import dankook.cs.aj24.common.util.UserRole;
+import dankook.cs.aj24.domain.user.UserRole;
 import dankook.cs.aj24.domain.oauth.PrincipalDetail;
 import dankook.cs.aj24.domain.user.UserDocument;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -50,8 +50,8 @@ public class JwtUtils {
         String name = (String) claims.get("name");
         String role = (String) claims.get("role");
         UserRole userRole = UserRole.valueOf(role);
-
         UserDocument userDocument = UserDocument.builder().email(email).name(name).userRole(userRole).build();
+
         Set<SimpleGrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority(userDocument.getUserRole().getValue()));
         PrincipalDetail principalDetail = new PrincipalDetail(userDocument, authorities);
 

@@ -5,9 +5,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,11 +15,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
-@Slf4j
+@Component
 public class JwtVerifyFilter extends OncePerRequestFilter {
-
-    // 상품 이미지가 보이지 않기에 상품 이미지를 출력하는 /api/items/view 경로를 추가
-    private static final String[] whitelist = {"/signUp", "/login" , "/refresh", "/", "/index.html"};
 
     private static void checkAuthorizationHeader(String header) {
         if(header == null) {
@@ -33,22 +30,17 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String requestURI = request.getRequestURI();
-        return PatternMatchUtils.simpleMatch(whitelist, requestURI);
+        return PatternMatchUtils.simpleMatch(JwtConstants.WHITELIST, requestURI);
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("--------------------------- JwtVerifyFilter ---------------------------");
-
         String authHeader = request.getHeader(JwtConstants.JWT_HEADER);
 
         try {
             checkAuthorizationHeader(authHeader);   // header 가 올바른 형식인지 체크
             String token = JwtUtils.getTokenFromHeader(authHeader);
             Authentication authentication = JwtUtils.getAuthentication(token);
-
-            log.info("authentication = {}", authentication);
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             filterChain.doFilter(request, response);    // 다음 필터로 이동

@@ -1,5 +1,6 @@
 package dankook.cs.aj24.domain.post;
 
+import dankook.cs.aj24.domain.user.UserDocument;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -24,13 +26,16 @@ public class PostDocument {
     private String content;
     private String imgUrl;
 
+    @DBRef
+    private UserDocument author; // 작성자 정보를 위한 DBRef 필드 추가
+
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    private LocalDateTime deletedAt; // deleted_At 필드 추가
+    private LocalDateTime deletedAt;
 
     @Transient
     public boolean isDeleted() {

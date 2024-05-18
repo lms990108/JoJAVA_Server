@@ -13,6 +13,7 @@ public class PostDTO {
     private String title;
     private String content;
     private String imgUrl;
+    private String authorId; // 작성자 ID 추가
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;

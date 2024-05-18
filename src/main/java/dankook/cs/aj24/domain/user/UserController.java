@@ -1,5 +1,7 @@
 package dankook.cs.aj24.domain.user;
 
+import dankook.cs.aj24.common.error.CustomException;
+import dankook.cs.aj24.domain.oauth.PrincipalDetail;
 import dankook.cs.aj24.domain.user.userdtos.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,18 +37,36 @@ public class UserController {
     @GetMapping("/me")
     @Operation(summary = "내 정보 조회", description = "로그인한 사용자의 정보를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDocument.class)))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
     public ResponseEntity<?> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated");
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("authentication is null");
+        }
+        else if (!(authentication.getPrincipal() instanceof OAuth2User)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(authentication.getPrincipal());
         }
 
-        OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
-        String userId = oauthUser.getAttribute("id");  // OAuth2User에 맞는 키로 수정
-        Optional<UserDocument> userDocument = userService.getUserById(userId);
+        String userEmail = ((OAuth2User) authentication.getPrincipal()).getName();
+
+        Optional<UserDocument> userDocument = userService.getUserByEmail(userEmail);
         if (userDocument.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
         return ResponseEntity.ok(userDocument.get());
+    }
+
+    @GetMapping("/current")
+    @Operation(summary = "현재 사용자 정보 조회", description = "현재 인증된 사용자의 정보를 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDocument.class)))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    public ResponseEntity<?> getCurrentUser() {
+        try {
+            UserDocument currentUser = userService.getCurrentUser();
+            return ResponseEntity.ok(currentUser);
+        } catch (CustomException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 }

@@ -1,11 +1,7 @@
 
 package dankook.cs.aj24.domain.user;
 
-import dankook.cs.aj24.common.util.UserRole;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 @Document("user")
 public class UserDocument {
 
@@ -26,8 +23,8 @@ public class UserDocument {
     private String id;
     private String name;
     private String email;
-    private String socialId; // 이 필드가 추가되어야 합니다.
-    private List<String> hart; // 게시글 좋아요 배열로 사용하기 위해 List<String> 형으로 변경
+    private String socialId;
+    private List<String> hart;
     private String profileImg;
     private UserRole userRole;
 
