@@ -7,4 +7,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface CommentRepository extends MongoRepository<CommentDocument, String> {
     Page<CommentDocument> findByDeletedAtIsNull(Pageable pageable);
 
+    void deleteByPostId(String postId);
+
+    Page<CommentDocument> findByPostIdAndDeletedAtIsNull(String postId, Pageable pageable);
+
 }

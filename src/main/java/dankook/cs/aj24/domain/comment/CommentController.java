@@ -68,4 +68,15 @@ public class CommentController {
     public Page<CommentDocument> getAllComments(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         return commentService.getAllComments(page, size);
     }
+
+    // 특정 게시글의 댓글 전체 조회
+    @GetMapping("/post/{postId}")
+    @Operation(summary = "특정 게시글의 댓글 조회", description = "특정 게시글에 달린 모든 댓글을 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "댓글 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDocument.class)))
+    public ResponseEntity<Page<CommentDocument>> getCommentsByPostId(@PathVariable String postId,
+                                                                     @RequestParam(defaultValue = "0") int page,
+                                                                     @RequestParam(defaultValue = "20") int size) {
+        Page<CommentDocument> comments = commentService.getCommentsByPostId(postId, page, size);
+        return ResponseEntity.ok(comments);
+    }
 }
