@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-public class JwtUtils {
+public class JwtUtil {
 
     public static String secretKey = JwtConstants.key;
 
@@ -30,7 +30,7 @@ public class JwtUtils {
     public static String generateToken(Map<String, Object> valueMap, int validTime) {
         SecretKey key = null;
         try {
-            key = Keys.hmacShaKeyFor(JwtUtils.secretKey.getBytes(StandardCharsets.UTF_8));
+            key = Keys.hmacShaKeyFor(JwtUtil.secretKey.getBytes(StandardCharsets.UTF_8));
         } catch(Exception e){
             throw new RuntimeException(e.getMessage());
         }
@@ -61,7 +61,7 @@ public class JwtUtils {
     public static Map<String, Object> validateToken(String token) {
         Map<String, Object> claim = null;
         try {
-            SecretKey key = Keys.hmacShaKeyFor(JwtUtils.secretKey.getBytes(StandardCharsets.UTF_8));
+            SecretKey key = Keys.hmacShaKeyFor(JwtUtil.secretKey.getBytes(StandardCharsets.UTF_8));
             claim = Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
@@ -86,9 +86,9 @@ public class JwtUtils {
     }
 
     // 토큰의 남은 만료시간 계산
-    public static long tokenRemainTime(Integer expTime) {
-        Date expDate = new Date((long) expTime * (1000));
-        long remainMs = expDate.getTime() - System.currentTimeMillis();
+    public static long tokenRemainTime(long expTime) {
+        long remainMs = expTime - System.currentTimeMillis();
         return remainMs / (1000 * 60);
     }
+
 }
