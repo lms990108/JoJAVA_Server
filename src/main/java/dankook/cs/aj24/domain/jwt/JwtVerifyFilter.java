@@ -1,10 +1,12 @@
 package dankook.cs.aj24.domain.jwt;
 
 import com.google.gson.Gson;
+import dankook.cs.aj24.common.util.RedisUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,9 @@ import java.util.Map;
 
 @Component
 public class JwtVerifyFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     private static void checkAuthorizationHeader(String header) {
         if(header == null) {
@@ -35,28 +40,29 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader(JwtConstants.JWT_HEADER);
-
         try {
-            checkAuthorizationHeader(authHeader);   // header 가 올바른 형식인지 체크
-            String token = JwtUtils.getTokenFromHeader(authHeader);
-            Authentication authentication = JwtUtils.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String authHeader = request.getHeader(JwtConstants.JWT_HEADER);
+            checkAuthorizationHeader(authHeader); // header 형식 검사
+            String token = JwtUtil.getTokenFromHeader(authHeader);
 
-            filterChain.doFilter(request, response);    // 다음 필터로 이동
-        } catch (Exception e) {
-            Gson gson = new Gson();
-            String json = "";
-            if (e instanceof CustomExpiredJwtException) {
-                json = gson.toJson(Map.of("Token_Expired", e.getMessage()));
-            } else {
-                json = gson.toJson(Map.of("error", e.getMessage()));
+            if (redisUtil.isTokenBlacklisted(token)) { // 토큰 블랙리스트 검사
+                throw new CustomJwtException("로그인 세션이 만료되었습니다.");
             }
 
-            response.setContentType("application/json; charset=UTF-8");
-            PrintWriter printWriter = response.getWriter();
-            printWriter.println(json);
-            printWriter.close();
+            Authentication authentication = JwtUtil.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            handleAuthenticationError(response, e);
         }
     }
+
+    private void handleAuthenticationError(HttpServletResponse response, Exception e) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json;charset=UTF-8");
+        PrintWriter writer = response.getWriter();
+        writer.write("{\"error\":\"" + e.getMessage() + "\"}");
+        writer.close();
+    }
+
 }

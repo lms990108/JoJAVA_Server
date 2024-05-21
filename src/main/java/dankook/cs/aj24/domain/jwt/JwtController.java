@@ -22,23 +22,23 @@ public class JwtController {
             throw new CustomJwtException("BEARER 로 시작하지 않는 올바르지 않은 토큰 형식입니다");
         }
 
-        String accessToken = JwtUtils.getTokenFromHeader(authHeader);
+        String accessToken = JwtUtil.getTokenFromHeader(authHeader);
 
         // Access Token 의 만료 여부 확인
-        if (!JwtUtils.isExpired(accessToken)) {
+        if (!JwtUtil.isExpired(accessToken)) {
             return Map.of("Access Token", accessToken, "Refresh Token", refreshToken);
         }
 
         // refreshToken 검증 후 새로운 토큰 생성 후 전달
-        Map<String, Object> claims = JwtUtils.validateToken(refreshToken);
-        String newAccessToken = JwtUtils.generateToken(claims, JwtConstants.ACCESS_EXP_TIME);
+        Map<String, Object> claims = JwtUtil.validateToken(refreshToken);
+        String newAccessToken = JwtUtil.generateToken(claims, JwtConstants.ACCESS_EXP_TIME);
 
         String newRefreshToken = refreshToken;
-        long expTime = JwtUtils.tokenRemainTime((Integer) claims.get("exp"));   // Refresh Token 남은 만료 시간
+        long expTime = JwtUtil.tokenRemainTime((Integer) claims.get("exp"));   // Refresh Token 남은 만료 시간
         log.info("Refresh Token Remain Expire Time = {}", expTime);
         // Refresh Token 의 만료 시간이 한 시간도 남지 않은 경우
         if (expTime <= 60) {
-            newRefreshToken = JwtUtils.generateToken(claims, JwtConstants.REFRESH_EXP_TIME);
+            newRefreshToken = JwtUtil.generateToken(claims, JwtConstants.REFRESH_EXP_TIME);
         }
 
         return Map.of("accessToken", newAccessToken, "refreshToken", newRefreshToken);

@@ -2,7 +2,7 @@ package dankook.cs.aj24.common.handler;
 
 import com.google.gson.Gson;
 import dankook.cs.aj24.domain.jwt.JwtConstants;
-import dankook.cs.aj24.domain.jwt.JwtUtils;
+import dankook.cs.aj24.domain.jwt.JwtUtil;
 import dankook.cs.aj24.domain.oauth.PrincipalDetail;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,8 +24,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 사용자 정보와 토큰을 포함한 응답 맵 생성
         Map<String, Object> responseMap = principal.getUserInfo();
-        responseMap.put("accessToken", JwtUtils.generateToken(responseMap, JwtConstants.ACCESS_EXP_TIME));
-        responseMap.put("refreshToken", JwtUtils.generateToken(responseMap, JwtConstants.REFRESH_EXP_TIME));
+        responseMap.put("accessToken", JwtUtil.generateToken(responseMap, JwtConstants.ACCESS_EXP_TIME));
+        responseMap.put("refreshToken", JwtUtil.generateToken(responseMap, JwtConstants.REFRESH_EXP_TIME));
         responseMap.put("redirectUrl", "http://localhost:8080/login/success");  // 프론트엔드에서 리디렉션할 URL
 
         // JSON 형태로 응답 생성
