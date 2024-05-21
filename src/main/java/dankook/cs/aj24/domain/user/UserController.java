@@ -69,4 +69,22 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
+
+    @PostMapping("/logout")
+    @Operation(summary = "사용자 로그아웃", description = "사용자가 로그아웃하면, 해당 사용자의 토큰을 블랙리스트에 추가합니다.")
+    @ApiResponse(responseCode = "200", description = "로그아웃 성공", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    public ResponseEntity<?> logoutUser(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token format.");
+            }
+
+            String token = authorizationHeader.substring(7); // "Bearer " 다음 부분이 토큰
+            userService.logout(token);
+            return ResponseEntity.ok("Logged out successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Logout failed: " + e.getMessage());
+        }
+    }
 }
