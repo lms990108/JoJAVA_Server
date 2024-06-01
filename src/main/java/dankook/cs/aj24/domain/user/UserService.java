@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static dankook.cs.aj24.common.error.ErrorCode.*;
@@ -64,4 +65,13 @@ public class UserService {
         }
     }
 
+    // 회원 탈퇴
+    public void deleteUser(String userId) {
+        UserDocument currentUser = getCurrentUser();
+        if (!currentUser.getId().equals(userId)) {
+            throw new CustomException(USER_NOT_AUTHORIZED);
+        }
+        currentUser.setDeletedAt(LocalDateTime.now());
+        userRepository.save(currentUser);
+    }
 }
