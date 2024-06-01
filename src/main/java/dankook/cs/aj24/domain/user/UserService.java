@@ -43,9 +43,9 @@ public class UserService {
         return userDocument;
     }
 
-
     // 로그아웃
     public void logout(String token) {
+        getCurrentUser();
         // validateToken 메서드로 클레임을 직접 추출하고 활용
         Map<String, Object> claims = JwtUtil.validateToken(token);
         long expirationTimeMillis = ((Integer) claims.get("exp")).longValue() * 1000; // 만료 시간을 millis로 변환

@@ -31,6 +31,7 @@ public class UserController {
     @Operation(summary = "현재 사용자 정보 조회", description = "현재 인증된 사용자의 정보를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "사용자 정보 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDocument.class)))
     @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
     public ResponseEntity<UserDocument> getCurrentUser() {
         UserDocument currentUser = userService.getCurrentUser();
         return ResponseEntity.ok(currentUser);
@@ -40,6 +41,7 @@ public class UserController {
     @Operation(summary = "사용자 로그아웃", description = "사용자가 로그아웃하면, 해당 사용자의 토큰을 블랙리스트에 추가합니다.")
     @ApiResponse(responseCode = "200", description = "로그아웃 성공", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
     public ResponseEntity<String> logoutUser(@RequestHeader("Authorization") String authorizationHeader) {
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token format.");
@@ -56,6 +58,7 @@ public class UserController {
     @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "409", description = "중복된 리소스", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
     public ResponseEntity<UserDocument> addHart(@RequestParam String placeId) {
         UserDocument updatedUser = userService.addHart(placeId);
         return ResponseEntity.ok(updatedUser);
@@ -64,7 +67,9 @@ public class UserController {
     @GetMapping("/delete")
     @Operation(summary = "회원 탈퇴", description = "사용자가 회원 탈퇴를 요청하면, deletedAt 필드에 현재 시간을 저장합니다.")
     @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
     public ResponseEntity<String> deleteUser() {
         UserDocument currentUser = userService.getCurrentUser();
         userService.deleteUser(currentUser.getId());
