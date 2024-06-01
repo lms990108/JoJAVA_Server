@@ -30,7 +30,9 @@ public class ReviewController {
     @PostMapping
     @Operation(summary = "리뷰 추가", description = "새로운 리뷰을 등록합니다.")
     @ApiResponse(responseCode = "200", description = "리뷰 등록 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewDocument.class)))
-    public ResponseEntity<ReviewDocument> addReview(@RequestBody CreateReviewDTO createReviewDTO) {
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))    public ResponseEntity<ReviewDocument> addReview(@RequestBody CreateReviewDTO createReviewDTO) {
         ReviewDocument createdReview = reviewService.addReview(createReviewDTO);
         return ResponseEntity.ok(createdReview);
     }
@@ -39,7 +41,9 @@ public class ReviewController {
     @PutMapping("/{reviewId}")
     @Operation(summary = "리뷰 수정", description = "기존 리뷰을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "리뷰 수정 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewDocument.class)))
-    public ResponseEntity<ReviewDocument> updateReview(@PathVariable String reviewId, @RequestBody UpdateReviewDTO updateReviewDTO) {
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))    public ResponseEntity<ReviewDocument> updateReview(@PathVariable String reviewId, @RequestBody UpdateReviewDTO updateReviewDTO) {
         ReviewDocument updatedReview = reviewService.updateReview(reviewId, updateReviewDTO);
         return ResponseEntity.ok(updatedReview);
     }
@@ -48,7 +52,9 @@ public class ReviewController {
     @DeleteMapping("/{reviewId}")
     @Operation(summary = "리뷰 삭제", description = "리뷰을 삭제합니다. (soft_delete)")
     @ApiResponse(responseCode = "200", description = "리뷰 삭제 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewDocument.class)))
-    public ResponseEntity<ReviewDocument> deleteReview(@PathVariable String reviewId){
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))    public ResponseEntity<ReviewDocument> deleteReview(@PathVariable String reviewId){
         ReviewDocument deletedReview = reviewService.deleteReview(reviewId);
         return ResponseEntity.ok(deletedReview);
     }
