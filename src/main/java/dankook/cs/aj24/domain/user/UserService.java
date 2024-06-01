@@ -3,8 +3,6 @@ package dankook.cs.aj24.domain.user;
 import dankook.cs.aj24.common.error.CustomException;
 import dankook.cs.aj24.common.util.RedisUtil;
 import dankook.cs.aj24.domain.jwt.JwtUtil;
-import dankook.cs.aj24.domain.user.userdtos.UserDTO;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,17 +21,10 @@ public class UserService {
     @Autowired
     private RedisUtil redisUtil;
 
-    public UserDocument createUser(UserDTO userDTO) {
-        UserDocument user = userDTO.toUserDocument();
-        return userRepository.save(user);
-    }
-
-    public Optional<UserDocument> getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    public void deleteUser(String id) {
-        userRepository.deleteById(id);
+    // id로 유저 조회
+    public UserDocument getUser(String userId){
+        Optional<UserDocument> user = userRepository.findById(userId);
+        return user.orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
     // 현재 접속한 유저
@@ -72,6 +63,5 @@ public class UserService {
             throw new CustomException(DUPLICATE_RESOURCE);
         }
     }
-
 
 }
