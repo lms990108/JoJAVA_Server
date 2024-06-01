@@ -35,9 +35,14 @@ public class UserService {
             throw new CustomException(USER_NOT_AUTHENTICATED);
         }
         String userEmail = ((OAuth2User) authentication.getPrincipal()).getName();
-        return userRepository.findByEmail(userEmail)
+        UserDocument userDocument = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        if (userDocument.getDeletedAt() != null) {
+            throw new CustomException(USER_ALREADY_DELETED);
+        }
+        return userDocument;
     }
+
 
     // 로그아웃
     public void logout(String token) {

@@ -29,6 +29,9 @@ public enum ErrorCode {
     /* 409 : CONFLICT : Resource의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     DUPLICATE_RESOURCE(HttpStatus.CONFLICT, "데이터가 이미 존재합니다."),
 
+    /* 410 : GONE : 리소스가 더 이상 유효하지 않음 */
+    USER_ALREADY_DELETED(HttpStatus.GONE, "탈퇴된 사용자입니다."),
+
     /* 500 INTERNAL_SERVER_ERROR : 서버 내부 에러 */
     IO_EXCEPTION_ON_IMAGE_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드 중 입출력 오류가 발생했습니다."),
     PUT_OBJECT_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "S3에 객체를 업로드하는 중 예외가 발생했습니다."),
