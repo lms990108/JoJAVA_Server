@@ -61,12 +61,13 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     @Operation(summary = "회원 탈퇴", description = "사용자가 회원 탈퇴를 요청하면, deletedAt 필드에 현재 시간을 저장합니다.")
     @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
-    public ResponseEntity<String> deleteUser(@RequestParam String userId) {
-        userService.deleteUser(userId);
+    public ResponseEntity<String> deleteUser() {
+        UserDocument currentUser = userService.getCurrentUser();
+        userService.deleteUser(currentUser.getId());
         return ResponseEntity.ok("User successfully deleted.");
     }
 }
