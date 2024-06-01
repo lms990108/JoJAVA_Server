@@ -4,18 +4,16 @@ import dankook.cs.aj24.common.error.CustomException;
 import dankook.cs.aj24.common.util.RedisUtil;
 import dankook.cs.aj24.domain.jwt.JwtUtil;
 import dankook.cs.aj24.domain.user.userdtos.UserDTO;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import static dankook.cs.aj24.common.error.ErrorCode.USER_NOT_AUTHENTICATED;
-import static dankook.cs.aj24.common.error.ErrorCode.USER_NOT_FOUND;
+import static dankook.cs.aj24.common.error.ErrorCode.*;
 
 @Service
 public class UserService {
@@ -38,6 +36,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    // 현재 접속한 유저
     public UserDocument getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -48,6 +47,7 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
     }
 
+    // 로그아웃
     public void logout(String token) {
         // validateToken 메서드로 클레임을 직접 추출하고 활용
         Map<String, Object> claims = JwtUtil.validateToken(token);
@@ -56,5 +56,22 @@ public class UserService {
 
         redisUtil.blacklistToken(token, ttlMinutes);
     }
+
+    // 찜목록 추가
+    public UserDocument addHart(String placeId) {
+        UserDocument currentUser = getCurrentUser();
+        List<String> hartList = currentUser.getHart();
+        if (hartList == null) {
+            hartList = new ArrayList<>(); // 초기화
+        }
+        if (!hartList.contains(placeId)) {
+            hartList.add(placeId);
+            currentUser.setHart(hartList);
+            return userRepository.save(currentUser);
+        } else {
+            throw new CustomException(DUPLICATE_RESOURCE);
+        }
+    }
+
 
 }

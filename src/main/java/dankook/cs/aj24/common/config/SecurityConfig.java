@@ -39,6 +39,12 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)  // 스프링 시큐리티의 기본 로그인 페이지를 비활성화
                 .httpBasic(AbstractHttpConfigurer::disable)  // HTTP 기본 인증 비활성화
 
+                // HTTP 요청에 대한 보안 규칙을 설정
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(JwtConstants.WHITELIST).permitAll()  // 지정된 경로들은 인증 없이 접근 허용
+                        .requestMatchers("/admin/**").hasRole("ADMIN")  // "/admin/**" 경로는 'ADMIN' 역할을 가진 사용자만 접근 가능
+                        .anyRequest().authenticated())  // 그 외 모든 요청은 인증을 요구
+
                 // JWT 필터 추가
                 .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
 
@@ -51,12 +57,6 @@ public class SecurityConfig {
                 // 세션 관리 설정
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // 세션을 생성하지 않고, 상태를 유지하지 않는 정책 설정
-
-                // HTTP 요청에 대한 보안 규칙을 설정
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(JwtConstants.WHITELIST).permitAll()  // 지정된 경로들은 인증 없이 접근 허용
-                        .requestMatchers("/admin/**").hasRole("ADMIN")  // "/admin/**" 경로는 'ADMIN' 역할을 가진 사용자만 접근 가능
-                        .anyRequest().authenticated())  // 그 외 모든 요청은 인증을 요구
 
                 .build();  // HttpSecurity 객체를 사용하여 SecurityFilterChain을 생성
     }
