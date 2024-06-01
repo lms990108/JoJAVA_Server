@@ -30,6 +30,9 @@ public class CommentController {
     @PostMapping
     @Operation(summary = "댓글 추가", description = "새로운 댓글을 등록합니다.")
     @ApiResponse(responseCode = "200", description = "댓글 등록 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDocument.class)))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
     public ResponseEntity<CommentDocument> addComment(@RequestBody CreateCommentDTO createCommentDTO) {
         CommentDocument createdComment = commentService.addComment(createCommentDTO);
         return ResponseEntity.ok(createdComment);
@@ -39,6 +42,9 @@ public class CommentController {
     @PutMapping("/{commentId}")
     @Operation(summary = "댓글 수정", description = "기존 댓글을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "댓글 수정 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDocument.class)))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
     public ResponseEntity<CommentDocument> updateComment(@PathVariable String commentId, @RequestBody UpdateCommentDTO updateCommentDTO) {
         CommentDocument updatedComment = commentService.updateComment(commentId, updateCommentDTO);
         return ResponseEntity.ok(updatedComment);
@@ -48,6 +54,9 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다. (soft_delete)")
     @ApiResponse(responseCode = "200", description = "댓글 삭제 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CommentDocument.class)))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
     public ResponseEntity<CommentDocument> deleteComment(@PathVariable String commentId){
         CommentDocument deletedComment = commentService.deleteComment(commentId);
         return ResponseEntity.ok(deletedComment);

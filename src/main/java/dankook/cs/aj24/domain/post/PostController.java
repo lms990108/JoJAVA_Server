@@ -30,6 +30,9 @@ public class PostController {
     @PostMapping
     @Operation(summary = "게시글 추가", description = "새로운 게시글을 등록합니다.")
     @ApiResponse(responseCode = "200", description = "게시글 등록 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDocument.class)))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
     public ResponseEntity<PostDocument> addPost(@RequestBody CreatePostDTO createPostDTO) {
         PostDocument createdPost = postService.addPost(createPostDTO);
         return ResponseEntity.ok(createdPost);
@@ -39,6 +42,9 @@ public class PostController {
     @PutMapping("/{postId}")
     @Operation(summary = "게시글 수정", description = "기존 게시글을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "게시글 수정 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDocument.class)))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
     public ResponseEntity<PostDocument> updatePost(@PathVariable String postId, @RequestBody UpdatePostDTO updatePostDTO) {
         PostDocument updatedPost = postService.updatePost(postId, updatePostDTO);
         return ResponseEntity.ok(updatedPost);
@@ -48,6 +54,9 @@ public class PostController {
     @DeleteMapping("/{postId}")
     @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다. (soft_delete)")
     @ApiResponse(responseCode = "200", description = "게시글 삭제 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PostDocument.class)))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
     public ResponseEntity<PostDocument> deletePost(@PathVariable String postId){
         PostDocument deletedPost = postService.deletePost(postId);
         return ResponseEntity.ok(deletedPost);
