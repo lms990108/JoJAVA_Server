@@ -67,6 +67,8 @@ public class KakaoAuthService {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(headers);
         RestTemplate rt = new RestTemplate();
+
+        // 카카오 유저 정보 API로 POST 요청을 보내는 부분
         ResponseEntity<String> response = rt.exchange(
                 "https://kapi.kakao.com/v2/user/me",
                 HttpMethod.POST,
@@ -85,12 +87,12 @@ public class KakaoAuthService {
 
         Long id = jsonNode.get("id").asLong();
         String email = jsonNode.get("kakao_account").get("email").asText();
-        String nickname = jsonNode.get("properties").get("nickname").asText();
+        String name = jsonNode.get("properties").get("nickname").asText();
 
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("id", id);
         userInfo.put("email", email);
-        userInfo.put("nickname", nickname);
+        userInfo.put("name", name);
 
         return userInfo;
     }
@@ -98,16 +100,19 @@ public class KakaoAuthService {
     // 유저 정보로 JWT 토큰 생성
     public AuthTokens generateJwtTokens(Map<String, Object> userInfo) {
         String email = (String) userInfo.get("email");
-        String nickname = (String) userInfo.get("nickname");
+        String name = (String) userInfo.get("name");
 
-        Map<String, Object> claims = Map.of(
-                "email", email,
-                "nickname", nickname
-        );
+        // 클레임 생성
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", "USER");
+        claims.put("name", name);
+        claims.put("email", email);
 
+        // AccessToken과 RefreshToken 생성
         String accessToken = JwtUtil.generateToken(claims, 60);  // 60분 유효기간
         String refreshToken = JwtUtil.generateToken(claims, 60 * 24 * 14);  // 14일 유효기간
 
+        // AuthTokens 객체 생성 및 반환
         return new AuthTokens(accessToken, refreshToken, "Bearer", 60 * 60L);
     }
 }
