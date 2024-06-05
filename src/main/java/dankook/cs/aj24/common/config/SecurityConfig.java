@@ -40,6 +40,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//                .cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)  // CSRF(Cross-Site Request Forgery) 보호 기능을 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)  // 스프링 시큐리티의 기본 로그인 페이지를 비활성화
                 .httpBasic(AbstractHttpConfigurer::disable)  // HTTP 기본 인증 비활성화
@@ -47,7 +48,6 @@ public class SecurityConfig {
                 // HTTP 요청에 대한 보안 규칙을 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(JwtConstants.WHITELIST).permitAll()  // 지정된 경로들은 인증 없이 접근 허용
-                        .requestMatchers(JwtConstants.COMMONAPILIST).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")  // "/admin/**" 경로는 'ADMIN' 역할을 가진 사용자만 접근 가능
                         .anyRequest().authenticated())  // 그 외 모든 화요청은 인증을 요구
 
