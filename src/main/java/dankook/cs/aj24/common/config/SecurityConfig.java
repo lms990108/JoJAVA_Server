@@ -47,8 +47,9 @@ public class SecurityConfig {
                 // HTTP 요청에 대한 보안 규칙을 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(JwtConstants.WHITELIST).permitAll()  // 지정된 경로들은 인증 없이 접근 허용
+                        .requestMatchers(JwtConstants.COMMONAPILIST).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")  // "/admin/**" 경로는 'ADMIN' 역할을 가진 사용자만 접근 가능
-                        .anyRequest().authenticated())  // 그 외 모든 요청은 인증을 요구
+                        .anyRequest().authenticated())  // 그 외 모든 화요청은 인증을 요구
 
                 // JWT 필터 추가
                 .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
