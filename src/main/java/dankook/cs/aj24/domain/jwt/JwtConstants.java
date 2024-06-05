@@ -7,5 +7,5 @@ public class JwtConstants {
 
     public static final String JWT_HEADER = "Authorization";
     public static final String JWT_TYPE = "Bearer ";
-    public static final String[] WHITELIST = {"/signUp", "/login", "/refresh", "/", "/index.html" , "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**", "/api/**"};
+    public static final String[] WHITELIST = {"/signUp", "/login", "/refresh", "/", "/index.html" , "/swagger-ui.html", "/api-docs/**", "/v3/api-docs/**", "/swagger-ui/**", "/webjars/**", "/api/**", "/login/oauth2/code/kakao"};
 }
