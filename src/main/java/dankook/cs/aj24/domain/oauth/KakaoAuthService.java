@@ -132,7 +132,7 @@ public class KakaoAuthService {
         claims.put("email", email);
 
         // AccessToken과 RefreshToken 생성
-        String accessToken = JwtUtil.generateToken(claims, 60);  // 60분 유효기간
+        String accessToken = JwtUtil.generateToken(claims, 600);  // 600분 유효기간
         String refreshToken = JwtUtil.generateToken(claims, 60 * 24 * 14);  // 14일 유효기간
 
         // JWT 토큰으로 Authentication 객체 생성
