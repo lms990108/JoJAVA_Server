@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dankook.cs.aj24.domain.jwt.AuthTokens;
 import dankook.cs.aj24.domain.jwt.JwtUtil;
+import dankook.cs.aj24.domain.user.UserDocument;
+import dankook.cs.aj24.domain.user.UserRepository;
+import dankook.cs.aj24.domain.user.UserRole;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.http.*;
@@ -14,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class KakaoAuthService {
@@ -26,6 +30,11 @@ public class KakaoAuthService {
 
     @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
     private String tokenUri;
+    private final UserRepository userRepository;
+
+    public KakaoAuthService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // 인증 코드로 AccessToken 요청
     public String getAccessToken(String code) {
@@ -93,6 +102,18 @@ public class KakaoAuthService {
         userInfo.put("id", id);
         userInfo.put("email", email);
         userInfo.put("name", name);
+
+        // 유저가 이미 존재하는지 확인
+        Optional<UserDocument> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isEmpty()) {
+            // 유저가 존재하지 않으면 새로 저장
+            UserDocument newUser = UserDocument.builder()
+                    .name(name)
+                    .email(email)
+                    .userRole(UserRole.USER)
+                    .build();
+            userRepository.save(newUser);
+        }
 
         return userInfo;
     }
