@@ -4,7 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dankook.cs.aj24.domain.jwt.AuthTokens;
 import dankook.cs.aj24.domain.jwt.JwtUtil;
+import dankook.cs.aj24.domain.user.UserDocument;
+import dankook.cs.aj24.domain.user.UserRepository;
+import dankook.cs.aj24.domain.user.UserRole;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -14,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class KakaoAuthService {
@@ -26,6 +32,11 @@ public class KakaoAuthService {
 
     @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
     private String tokenUri;
+    private final UserRepository userRepository;
+
+    public KakaoAuthService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // 인증 코드로 AccessToken 요청
     public String getAccessToken(String code) {
@@ -94,6 +105,18 @@ public class KakaoAuthService {
         userInfo.put("email", email);
         userInfo.put("name", name);
 
+        // 유저가 이미 존재하는지 확인
+        Optional<UserDocument> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isEmpty()) {
+            // 유저가 존재하지 않으면 새로 저장
+            UserDocument newUser = UserDocument.builder()
+                    .name(name)
+                    .email(email)
+                    .userRole(UserRole.USER)
+                    .build();
+            userRepository.save(newUser);
+        }
+
         return userInfo;
     }
 
@@ -111,6 +134,12 @@ public class KakaoAuthService {
         // AccessToken과 RefreshToken 생성
         String accessToken = JwtUtil.generateToken(claims, 60);  // 60분 유효기간
         String refreshToken = JwtUtil.generateToken(claims, 60 * 24 * 14);  // 14일 유효기간
+
+        // JWT 토큰으로 Authentication 객체 생성
+        Authentication authentication = JwtUtil.getAuthentication(accessToken);
+
+        // SecurityContextHolder에 인증 정보 설정
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // AuthTokens 객체 생성 및 반환
         return new AuthTokens(accessToken, refreshToken, "Bearer", 60 * 60L);

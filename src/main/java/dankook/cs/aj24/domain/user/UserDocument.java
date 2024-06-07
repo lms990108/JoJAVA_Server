@@ -23,7 +23,6 @@ public class UserDocument {
     private String id;
     private String name;
     private String email;
-    private String socialId;
     private List<String> hart;
     private String profileImg;
     private UserRole userRole;

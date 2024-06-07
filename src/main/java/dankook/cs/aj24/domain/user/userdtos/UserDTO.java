@@ -21,15 +21,4 @@ public class UserDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
-
-    public UserDocument toUserDocument() {
-        return UserDocument.builder()
-                .name(this.name)
-                .email(this.email)
-                .socialId(this.socialId)
-                .hart(this.hart)
-                .profileImg(this.profileImg)
-                .userRole(UserRole.USER) // 기본 권한 설정
-                .build();
-    }
 }

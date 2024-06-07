@@ -3,6 +3,7 @@ package dankook.cs.aj24.domain.user;
 import dankook.cs.aj24.common.error.CustomException;
 import dankook.cs.aj24.common.util.RedisUtil;
 import dankook.cs.aj24.domain.jwt.JwtUtil;
+import dankook.cs.aj24.domain.oauth.PrincipalDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,10 +18,14 @@ import static dankook.cs.aj24.common.error.ErrorCode.*;
 @Service
 public class UserService {
 
+    private final UserRepository userRepository;
+    private final RedisUtil redisUtil;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RedisUtil redisUtil;
+    public UserService(UserRepository userRepository, RedisUtil redisUtil) {
+        this.userRepository = userRepository;
+        this.redisUtil = redisUtil;
+    }
 
     // id로 유저 조회
     public UserDocument getUser(String userId){
@@ -34,7 +39,7 @@ public class UserService {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new CustomException(USER_NOT_AUTHENTICATED);
         }
-        String userEmail = ((OAuth2User) authentication.getPrincipal()).getName();
+        String userEmail = ((PrincipalDetail) authentication.getPrincipal()).getUsername();
         UserDocument userDocument = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         if (userDocument.getDeletedAt() != null) {
@@ -42,6 +47,7 @@ public class UserService {
         }
         return userDocument;
     }
+
 
     // 로그아웃
     public void logout(String token) {
