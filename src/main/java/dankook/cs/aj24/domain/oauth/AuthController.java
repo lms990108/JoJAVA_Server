@@ -1,7 +1,6 @@
 package dankook.cs.aj24.domain.oauth;
 
 import dankook.cs.aj24.domain.jwt.AuthTokens;
-import dankook.cs.aj24.domain.oauth.KakaoAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,9 +19,6 @@ public class AuthController {
     @Autowired
     private KakaoAuthService kakaoAuthService;
 
-    @Autowired
-    private CustomOAuth2UserService customOAuth2UserService;
-
     @PostMapping("/kakao")
     @Operation(
             summary = "카카오 로그인",
@@ -36,7 +32,6 @@ public class AuthController {
     public AuthTokens kakaoLogin(@RequestParam String code) {
         String accessToken = kakaoAuthService.getAccessToken(code);
         Map<String, Object> userInfo = kakaoAuthService.getUserInfo(accessToken);
-        customOAuth2UserService.saveSocialUser(userInfo.get("id").toString(), userInfo.get("name").toString(), "", userInfo.get("email").toString());
         return kakaoAuthService.generateJwtTokens(userInfo);
     }
 }
