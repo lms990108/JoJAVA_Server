@@ -123,4 +123,11 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
         return reviewRepository.findByDeletedAtIsNull(pageable);
     }
+
+    // 특정 target에 대한 리뷰 조회 및 페이지네이션
+    public Page<ReviewDocument> getReviewsByTarget(String target, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return reviewRepository.findByTargetAndDeletedAtIsNull(target, pageable);
+    }
+
 }

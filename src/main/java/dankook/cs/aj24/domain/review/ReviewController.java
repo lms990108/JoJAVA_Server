@@ -74,4 +74,13 @@ public class ReviewController {
     public Page<ReviewDocument> getAllReviews(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         return reviewService.getAllReviews(page, size);
     }
+
+    // 특정 target에 대한 리뷰 조회
+    @GetMapping("/target")
+    @Operation(summary = "특정 target에 대한 리뷰 조회", description = "특정 target에 대한 리뷰 목록을 반환합니다.")
+    @ApiResponse(responseCode = "200", description = "리뷰 목록 조회 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ReviewDocument.class)))
+    public Page<ReviewDocument> getReviewsByTarget(@RequestParam String target, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return reviewService.getReviewsByTarget(target, page, size);
+    }
+
 }
