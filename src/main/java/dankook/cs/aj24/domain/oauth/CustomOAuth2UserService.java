@@ -36,8 +36,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String profileImg = kakaoUserInfo.getProfileImg(); // 프로필 이미지 URL
 
         // 소셜 ID를 기준으로 기존 사용자를 검색하거나 새로운 사용자를 등록
-        Optional<UserDocument> bySocialId = userRepository.findBySocialId(socialId);
-        UserDocument user = bySocialId.orElseGet(() -> saveSocialUser(socialId, name, profileImg, email));
+        Optional<UserDocument> byEmail = userRepository.findBySocialId(email);
+        UserDocument user = byEmail.orElseGet(() -> saveSocialUser(socialId, name, profileImg, email));
 
         PrincipalDetail principalDetail = new PrincipalDetail(user, Collections.singleton(new SimpleGrantedAuthority(user.getUserRole().getValue())),
                 attributes);
