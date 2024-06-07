@@ -53,7 +53,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     // 사용자 정보를 저장하는 메서드, 필요한 정보를 모두 파라미터로 전달
     public UserDocument saveSocialUser(String socialId, String name, String profileImg, String email) {
         UserDocument newUser = UserDocument.builder()
-                .socialId(socialId)
                 .name(name)
                 .profileImg(profileImg)
                 .email(email)
