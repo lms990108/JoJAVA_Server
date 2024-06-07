@@ -35,7 +35,7 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
         String httpMethod = request.getMethod();
 
-        // 특정 경로에 대해 GET 요청과 POST 요청을 모두 필터링하도록 설정
+        // 특정 경로에 대해 GET 요청과 POST, PUT, DELETE 요청을 모두 필터링하도록 설정
         if (PatternMatchUtils.simpleMatch("/api/users/**", requestURI)) {
             return false;
         }
@@ -45,25 +45,26 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
             return true;
         }
 
-        // POST 요청이 아닌 경우
-        if (!httpMethod.equalsIgnoreCase("POST")) {
+        // POST, PUT, DELETE 요청이 아닌 경우 = GET 요청인 경우
+        if (!httpMethod.equalsIgnoreCase("POST") && !httpMethod.equalsIgnoreCase("PUT") && !httpMethod.equalsIgnoreCase("DELETE")) {
             for (String pattern : JwtConstants.WHITELIST) {
                 if (PatternMatchUtils.simpleMatch(pattern, requestURI)) {
-                    return true; // 화이트리스트에 포함된 경우 필터를 거치지 않음
+                    return true; // 화이트리스트에 포함된 경우 필터를 거치지 않음 : Get & 화이트리스트
                 }
             }
-            return false; // 화이트리스트에 포함되지 않은 경우 필터를 거침
+            return false; // 화이트리스트에 포함되지 않은 경우 필터를 거침 : Get이지만 화이트리스트 아님
         }
 
-        // POST 요청인 경우
+        // POST, PUT, DELETE 요청인 경우
         for (String pattern : JwtConstants.WHITELIST) {
             if (PatternMatchUtils.simpleMatch(pattern, requestURI)) {
                 return false; // 화이트리스트에 포함되더라도 필터를 거침
             }
         }
 
-        return false; // POST 요청이면서 화이트리스트에 포함되지 않은 경우
+        return false; // POST, PUT, DELETE 요청이면서 화이트리스트에 포함되지 않은 경우
     }
+
 
 
     @Override
