@@ -33,6 +33,7 @@ public enum ErrorCode {
 
     /* 410 : GONE : 리소스가 더 이상 유효하지 않음 */
     USER_ALREADY_DELETED(HttpStatus.GONE, "탈퇴된 사용자입니다."),
+    PLACE_DELETED(HttpStatus.GONE, "삭제된 장소입니다"),
 
     /* 500 INTERNAL_SERVER_ERROR : 서버 내부 에러 */
     IO_EXCEPTION_ON_IMAGE_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드 중 입출력 오류가 발생했습니다."),
