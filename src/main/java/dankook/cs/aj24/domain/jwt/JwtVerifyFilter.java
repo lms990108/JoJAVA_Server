@@ -1,6 +1,5 @@
 package dankook.cs.aj24.domain.jwt;
 
-import com.google.gson.Gson;
 import dankook.cs.aj24.common.util.RedisUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,7 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 @Component
 public class JwtVerifyFilter extends OncePerRequestFilter {
@@ -24,19 +22,49 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
     private RedisUtil redisUtil;
 
     private static void checkAuthorizationHeader(String header) {
-        if(header == null) {
+        if (header == null) {
             throw new CustomJwtException("토큰이 전달되지 않았습니다");
         } else if (!header.startsWith(JwtConstants.JWT_TYPE)) {
             throw new CustomJwtException("BEARER 로 시작하지 않는 올바르지 않은 토큰 형식입니다");
         }
     }
 
-    // 필터를 거치지 않을 URL 을 설정하고, true 를 return 하면 현재 필터를 건너뛰고 다음 필터로 이동
+    // 필터를 거치지 않을 URL 및 메서드를 설정하고, true 를 return 하면 현재 필터를 건너뛰고 다음 필터로 이동
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String requestURI = request.getRequestURI();
-        return PatternMatchUtils.simpleMatch(JwtConstants.WHITELIST, requestURI);
+        String httpMethod = request.getMethod();
+
+        // 특정 경로에 대해 GET 요청과 POST 요청을 모두 필터링하도록 설정
+        if (PatternMatchUtils.simpleMatch("/api/users/**", requestURI)) {
+            return false;
+        }
+
+        // 인증 code 로직은 필터링 하지 않음
+        if (PatternMatchUtils.simpleMatch("/api/auth/**", requestURI)) {
+            return true;
+        }
+
+        // POST 요청이 아닌 경우
+        if (!httpMethod.equalsIgnoreCase("POST")) {
+            for (String pattern : JwtConstants.WHITELIST) {
+                if (PatternMatchUtils.simpleMatch(pattern, requestURI)) {
+                    return true; // 화이트리스트에 포함된 경우 필터를 거치지 않음
+                }
+            }
+            return false; // 화이트리스트에 포함되지 않은 경우 필터를 거침
+        }
+
+        // POST 요청인 경우
+        for (String pattern : JwtConstants.WHITELIST) {
+            if (PatternMatchUtils.simpleMatch(pattern, requestURI)) {
+                return false; // 화이트리스트에 포함되더라도 필터를 거침
+            }
+        }
+
+        return false; // POST 요청이면서 화이트리스트에 포함되지 않은 경우
     }
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -64,5 +92,4 @@ public class JwtVerifyFilter extends OncePerRequestFilter {
         writer.write("{\"error\":\"" + e.getMessage() + "\"}");
         writer.close();
     }
-
 }

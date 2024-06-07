@@ -39,9 +39,7 @@ public class UserService {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new CustomException(USER_NOT_AUTHENTICATED);
         }
-        System.out.println("authentication = " + authentication);
         String userEmail = ((PrincipalDetail) authentication.getPrincipal()).getUsername();
-        System.out.println("email = " + userEmail);
         UserDocument userDocument = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         if (userDocument.getDeletedAt() != null) {
