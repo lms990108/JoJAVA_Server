@@ -1,7 +1,6 @@
 package dankook.cs.aj24.common.config;
 
 import dankook.cs.aj24.domain.jwt.JwtConstants;
-import dankook.cs.aj24.domain.oauth.CustomOAuth2UserService;
 import dankook.cs.aj24.domain.jwt.JwtVerifyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import dankook.cs.aj24.common.handler.CustomSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -25,14 +23,10 @@ import java.util.Arrays;
 @EnableMethodSecurity  // 메서드 수준에서의 보안을 활성화
 public class SecurityConfig {
 
-    private final CustomOAuth2UserService customOAuth2UserService;
-    private final CustomSuccessHandler customSuccessHandler;
     private final JwtVerifyFilter jwtVerifyFilter;
 
     @Autowired  // 스프링의 의존성 주입을 위한 생성자
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JwtVerifyFilter jwtVerifyFilter) {
-        this.customOAuth2UserService = customOAuth2UserService;
-        this.customSuccessHandler = customSuccessHandler;
+    public SecurityConfig(JwtVerifyFilter jwtVerifyFilter) {
         this.jwtVerifyFilter = jwtVerifyFilter;
     }
 
@@ -53,12 +47,6 @@ public class SecurityConfig {
 
                 // JWT 필터 추가
                 .addFilterBefore(jwtVerifyFilter, UsernamePasswordAuthenticationFilter.class)
-
-                // OAuth2 로그인 설정
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService))  // OAuth2 로그인 시 사용자 정보를 가져오는 서비스를 설정
-                        .successHandler(customSuccessHandler))  // 로그인 성공 후 처리를 위한 핸들러 설정
 
                 // 세션 관리 설정
                 .sessionManagement(session -> session
