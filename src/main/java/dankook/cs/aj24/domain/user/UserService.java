@@ -61,18 +61,31 @@ public class UserService {
     }
 
     // 찜목록 추가
-    public UserDocument addHart(String placeId) {
+    public UserDocument addFavoritePlace(String placeId) {
         UserDocument currentUser = getCurrentUser();
-        List<String> hartList = currentUser.getHart();
-        if (hartList == null) {
-            hartList = new ArrayList<>(); // 초기화
+        List<String> favoritePlaceList = currentUser.getFavorite_places();
+        if (favoritePlaceList == null) {
+            favoritePlaceList = new ArrayList<>(); // 초기화
         }
-        if (!hartList.contains(placeId)) {
-            hartList.add(placeId);
-            currentUser.setHart(hartList);
+        if (!favoritePlaceList.contains(placeId)) {
+            favoritePlaceList.add(placeId);
+            currentUser.setFavorite_places(favoritePlaceList);
             return userRepository.save(currentUser);
         } else {
             throw new CustomException(DUPLICATE_RESOURCE);
+        }
+    }
+
+    // 찜목록에서 선호 장소 삭제
+    public UserDocument removeFavoritePlace(String placeId) {
+        UserDocument currentUser = getCurrentUser();
+        List<String> favoritePlaceList = currentUser.getFavorite_places();
+        if (favoritePlaceList != null && favoritePlaceList.contains(placeId)) {
+            favoritePlaceList.remove(placeId);
+            currentUser.setFavorite_places(favoritePlaceList);
+            return userRepository.save(currentUser);
+        } else {
+            throw new CustomException(RESOURCE_NOT_FOUND);
         }
     }
 
