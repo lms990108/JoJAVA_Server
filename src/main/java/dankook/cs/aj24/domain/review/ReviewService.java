@@ -37,7 +37,7 @@ public class ReviewService {
         UserDocument author = userService.getCurrentUser();
 
         // targetPlaceId로 PlaceDocument 조회
-        PlaceDocument targetPlace = placeRepository.findById(createReviewDTO.getTargetPlaceId())
+        PlaceDocument targetPlace = placeRepository.findByKakaoPlaceId(createReviewDTO.getTargetPlaceId())
                 .orElseThrow(() -> new CustomException(OBJECT_NOT_FOUND));
 
         // createReviewDTO를 ReviewDocument로 변환
@@ -146,7 +146,7 @@ public class ReviewService {
     // 특정 targetPlace에 대한 리뷰 조회 및 페이지네이션
     public Page<ReviewDocument> getReviewsByTargetPlace(String targetPlaceId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        PlaceDocument targetPlace = placeRepository.findById(targetPlaceId)
+        PlaceDocument targetPlace = placeRepository.findByKakaoPlaceId(targetPlaceId)
                 .orElseThrow(() -> new CustomException(OBJECT_NOT_FOUND));
         return reviewRepository.findByTargetPlaceAndDeletedAtIsNull(targetPlace, pageable);
     }
@@ -155,10 +155,11 @@ public class ReviewService {
     private void updatePlaceRating(PlaceDocument place) {
         double averageRating = reviewRepository.findByTargetPlaceAndDeletedAtIsNull(place)
                 .stream()
-                .mapToDouble(review -> Double.parseDouble(review.getStars()))
+                .mapToDouble(ReviewDocument::getStars)  // 별점 필드를 double로 바로 사용
                 .average()
                 .orElse(0.0);
         place.setRating(averageRating);
         placeRepository.save(place);
     }
+
 }

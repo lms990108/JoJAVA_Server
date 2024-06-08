@@ -15,6 +15,7 @@ public class CreatePlaceDTO {
     private String category_group_name;
     private String distance;
     private String phone;
+    private String kakao_place_id;
     private String place_name;
     private String place_address_name;
     private String x;

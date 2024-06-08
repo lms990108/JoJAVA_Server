@@ -9,6 +9,6 @@ public class CreateReviewDTO {
     private String targetPlaceId; // PlaceDocument의 ID
     private String title;
     private String content;
-    private String stars;
+    private double stars;
     private String imgUrl;
 }

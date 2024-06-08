@@ -24,6 +24,7 @@ public class PlaceDocument {
     private String category_group_name;
     private String distance;
     private String phone;
+    private String kakaoPlaceId;
     private String place_name;
     private String place_address_name;
     private String x;

@@ -24,7 +24,7 @@ public class ReviewDocument {
     private String id;
     private String title;
     private String content;
-    private String stars;
+    private double stars;
     private String imgUrl;
 
     @DBRef

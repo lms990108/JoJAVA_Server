@@ -9,6 +9,6 @@ import lombok.Setter;
 public class UpdateReviewDTO {
     private String title;
     private String content;
-    private String stars;
+    private double stars;
     private String imgUrl;
 }

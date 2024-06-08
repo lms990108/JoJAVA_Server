@@ -33,6 +33,7 @@ public class PlaceService {
                 createPlaceDTO.getCategory_group_name(),
                 createPlaceDTO.getDistance(),
                 createPlaceDTO.getPhone(),
+                createPlaceDTO.getKakao_place_id(),
                 createPlaceDTO.getPlace_name(),
                 createPlaceDTO.getPlace_address_name(),
                 createPlaceDTO.getX(),
@@ -48,9 +49,9 @@ public class PlaceService {
     }
 
     // 장소 수정
-    public PlaceDocument updatePlace(String placeId, UpdatePlaceDTO updatePlaceDTO) {
+    public PlaceDocument updatePlace(String kakaoPlaceId, UpdatePlaceDTO updatePlaceDTO) {
         // 기존 장소 조회
-        PlaceDocument existingPlace = placeRepository.findById(placeId)
+        PlaceDocument existingPlace = placeRepository.findByKakaoPlaceId(kakaoPlaceId)
                 .orElseThrow(() -> new CustomException(OBJECT_NOT_FOUND));
 
         // 수정일자 업데이트
@@ -61,9 +62,9 @@ public class PlaceService {
     }
 
     // 장소 삭제
-    public PlaceDocument deletePlace(String placeId) {
+    public PlaceDocument deletePlace(String kakaoPlaceId) {
         // 기존 장소 조회
-        PlaceDocument existingPlace = placeRepository.findById(placeId)
+        PlaceDocument existingPlace = placeRepository.findByKakaoPlaceId(kakaoPlaceId)
                 .orElseThrow(() -> new CustomException(OBJECT_NOT_FOUND));
 
         // 삭제일자 업데이트
@@ -73,9 +74,9 @@ public class PlaceService {
     }
 
     // 장소 조회
-    public PlaceDocument getPlace(String placeId) {
+    public PlaceDocument getPlace(String kakaoPlaceId) {
         // 기존 장소 조회
-        PlaceDocument existingPlace = placeRepository.findById(placeId)
+        PlaceDocument existingPlace = placeRepository.findByKakaoPlaceId(kakaoPlaceId)
                 .orElseThrow(() -> new CustomException(OBJECT_NOT_FOUND));
 
         // 기존 장소가 삭제되었는지 확인
@@ -86,8 +87,6 @@ public class PlaceService {
             // 삭제되지 않은 장소이면 해당 장소 반환
             return existingPlace;
         }
-
-
     }
 
     // 삭제되지 않은 장소 전체 조회 및 페이지네이션
