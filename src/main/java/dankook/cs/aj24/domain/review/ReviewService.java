@@ -151,6 +151,15 @@ public class ReviewService {
         return reviewRepository.findByTargetPlaceAndDeletedAtIsNull(targetPlace, pageable);
     }
 
+    // 특정 유저가 작성한 리뷰 조회 및 페이지네이션
+    public Page<ReviewDocument> getReviewsByAuthor(int page, int size) {
+        // 현재 접속 중인 사용자 정보 조회
+        UserDocument currentUser = userService.getCurrentUser();
+        
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        return reviewRepository.findByAuthorAndDeletedAtIsNull(currentUser, pageable);
+    }
+
     // PlaceDocument의 평점 업데이트 메서드
     private void updatePlaceRating(PlaceDocument place) {
         double averageRating = reviewRepository.findByTargetPlaceAndDeletedAtIsNull(place)
