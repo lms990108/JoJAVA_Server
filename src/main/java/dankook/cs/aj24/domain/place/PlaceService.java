@@ -25,6 +25,7 @@ public class PlaceService {
 
     // 장소 생성
     public PlaceDocument addPlace(CreatePlaceDTO createPlaceDTO) {
+
         // CreatePlaceDTO를 PlaceDocument로 변환
         PlaceDocument place = new PlaceDocument(
                 null, // id는 자동 생성
@@ -43,6 +44,10 @@ public class PlaceService {
                 null, // 수정일자는 처음에는 null로 설정
                 null  // 삭제일자는 처음에는 null로 설정
         );
+
+        if(placeRepository.findByKakaoPlaceId(place.getKakaoPlaceId()).isPresent()){
+            throw new CustomException(DUPLICATE_RESOURCE);
+        }
 
         // 장소 추가
         return placeRepository.save(place);
