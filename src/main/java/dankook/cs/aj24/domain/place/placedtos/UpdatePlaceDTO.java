@@ -19,4 +19,5 @@ public class UpdatePlaceDTO {
     private String place_address_name;
     private String x;
     private String y;
+    private double rating; // 장소 평점
 }
