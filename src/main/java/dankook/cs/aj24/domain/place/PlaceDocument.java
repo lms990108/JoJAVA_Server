@@ -1,7 +1,5 @@
-package dankook.cs.aj24.domain.review;
+package dankook.cs.aj24.domain.place;
 
-import dankook.cs.aj24.domain.place.PlaceDocument;
-import dankook.cs.aj24.domain.user.UserDocument;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +7,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -17,21 +14,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-@Document("review")
-public class ReviewDocument {
+@Document("place")
+public class PlaceDocument {
 
     @Id
     private String id;
-    private String title;
-    private String content;
-    private double stars;
-    private String imgUrl;
-
-    @DBRef
-    private PlaceDocument targetPlace;
-
-    @DBRef
-    private UserDocument author; // 작성자 정보를 위한 DBRef 필드 추
+    private String address_name;
+    private String category_group_code;
+    private String category_group_name;
+    private String distance;
+    private String phone;
+    private String kakaoPlaceId;
+    private String place_name;
+    private String place_address_name;
+    private String x;
+    private String y;
+    private double rating; // 장소 평점
 
     @CreatedDate
     private LocalDateTime createdAt;
