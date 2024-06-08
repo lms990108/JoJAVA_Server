@@ -37,6 +37,7 @@ public class PlaceService {
                 createPlaceDTO.getPlace_address_name(),
                 createPlaceDTO.getX(),
                 createPlaceDTO.getY(),
+                createPlaceDTO.getRating(),
                 LocalDateTime.now(), // 생성일자 설정
                 null, // 수정일자는 처음에는 null로 설정
                 null  // 삭제일자는 처음에는 null로 설정
@@ -51,35 +52,6 @@ public class PlaceService {
         // 기존 장소 조회
         PlaceDocument existingPlace = placeRepository.findById(placeId)
                 .orElseThrow(() -> new CustomException(OBJECT_NOT_FOUND));
-
-        // 업데이트할 필드만 설정
-        if (updatePlaceDTO.getAddress_name() != null) {
-            existingPlace.setAddress_name(updatePlaceDTO.getAddress_name());
-        }
-        if (updatePlaceDTO.getCategory_group_code() != null) {
-            existingPlace.setCategory_group_code(updatePlaceDTO.getCategory_group_code());
-        }
-        if (updatePlaceDTO.getCategory_group_name() != null) {
-            existingPlace.setCategory_group_name(updatePlaceDTO.getCategory_group_name());
-        }
-        if (updatePlaceDTO.getDistance() != null) {
-            existingPlace.setDistance(updatePlaceDTO.getDistance());
-        }
-        if (updatePlaceDTO.getPhone() != null) {
-            existingPlace.setPhone(updatePlaceDTO.getPhone());
-        }
-        if (updatePlaceDTO.getPlace_name() != null) {
-            existingPlace.setPlace_name(updatePlaceDTO.getPlace_name());
-        }
-        if (updatePlaceDTO.getPlace_address_name() != null) {
-            existingPlace.setPlace_address_name(updatePlaceDTO.getPlace_address_name());
-        }
-        if (updatePlaceDTO.getX() != null) {
-            existingPlace.setX(updatePlaceDTO.getX());
-        }
-        if (updatePlaceDTO.getY() != null) {
-            existingPlace.setY(updatePlaceDTO.getY());
-        }
 
         // 수정일자 업데이트
         existingPlace.setUpdatedAt(LocalDateTime.now());
@@ -114,6 +86,8 @@ public class PlaceService {
             // 삭제되지 않은 장소이면 해당 장소 반환
             return existingPlace;
         }
+
+
     }
 
     // 삭제되지 않은 장소 전체 조회 및 페이지네이션
