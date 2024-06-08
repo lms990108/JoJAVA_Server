@@ -18,6 +18,8 @@ public class JwtConstants {
             "/api/reviews/**",
             "/api/auth",
             "/api/auth/**",
+            "/api/places",
+            "/api/places/**",
             "/signUp",
             "/login",
             "/refresh",
