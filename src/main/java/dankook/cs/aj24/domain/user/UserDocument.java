@@ -23,7 +23,7 @@ public class UserDocument {
     private String id;
     private String name;
     private String email;
-    private List<String> hart;
+    private List<String> favorite_places;
     private String profileImg;
     private UserRole userRole;
 

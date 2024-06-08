@@ -52,15 +52,27 @@ public class UserController {
         return ResponseEntity.ok("Logged out successfully.");
     }
 
-    @PostMapping("/hart")
+    @PostMapping("/favorite-places")
     @Operation(summary = "찜목록 추가", description = "현재 인증된 사용자의 찜목록에 장소를 추가합니다.")
     @ApiResponse(responseCode = "200", description = "찜목록 추가 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDocument.class)))
     @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "409", description = "중복된 리소스", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
-    public ResponseEntity<UserDocument> addHart(@RequestParam String placeId) {
-        UserDocument updatedUser = userService.addHart(placeId);
+    public ResponseEntity<UserDocument> addFavoritePlace(@RequestParam String kakaoPlaceId) {
+        UserDocument updatedUser = userService.addFavoritePlace(kakaoPlaceId);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/favorite-places")
+    @Operation(summary = "찜목록 삭제", description = "현재 인증된 사용자의 찜목록에서 장소를 삭제합니다.")
+    @ApiResponse(responseCode = "200", description = "찜목록 삭제 성공", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDocument.class)))
+    @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "사용자 찾을 수 없음", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "409", description = "중복된 리소스", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "410", description = "탈퇴된 사용자", content = @Content(mediaType = "application/json"))
+    public ResponseEntity<UserDocument> removeFavoritePlace(@RequestParam String kakaoPlaceId) {
+        UserDocument updatedUser = userService.removeFavoritePlace(kakaoPlaceId);
         return ResponseEntity.ok(updatedUser);
     }
 
