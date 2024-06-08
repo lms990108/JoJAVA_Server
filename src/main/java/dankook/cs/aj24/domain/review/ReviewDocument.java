@@ -1,5 +1,6 @@
 package dankook.cs.aj24.domain.review;
 
+import dankook.cs.aj24.domain.place.PlaceDocument;
 import dankook.cs.aj24.domain.user.UserDocument;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,11 +22,13 @@ public class ReviewDocument {
 
     @Id
     private String id;
-    private String target;
     private String title;
     private String content;
     private String stars;
     private String imgUrl;
+
+    @DBRef
+    private PlaceDocument targetPlace;
 
     @DBRef
     private UserDocument author; // 작성자 정보를 위한 DBRef 필드 추
